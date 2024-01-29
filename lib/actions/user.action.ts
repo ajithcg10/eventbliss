@@ -1,4 +1,4 @@
-'user server'
+'use server'
 
 import { connectDatbase } from "@lib/dataBase"
 import User from "@lib/dataBase/models/user.model"
