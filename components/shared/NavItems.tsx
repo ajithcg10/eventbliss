@@ -6,7 +6,7 @@ import React from 'react'
 
 export default function NavItems() {
   const pathName = usePathname()
-  console.log(pathName);
+  
   
  
   return (
@@ -14,7 +14,7 @@ export default function NavItems() {
       {headerLink.map((item)=>{
 
         return ( 
-          <li className={item.route === pathName ? "text-primary-500 flex-center p-medium-16 whitespace-nowrap":"flex-center p-medium-16 whitespace-nowrap"}>
+          <li key={item.label} className={item.route === pathName ? "text-primary-500 flex-center p-medium-16 whitespace-nowrap":"flex-center p-medium-16 whitespace-nowrap"}>
             <Link href={item.route}>
                   {item.label}
             </Link>
