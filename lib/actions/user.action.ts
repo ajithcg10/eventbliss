@@ -8,16 +8,16 @@ import { handleError } from "@lib/utils"
 import { CreateUserParams, UpdateUserParams } from "@types"
 import { revalidatePath } from "next/cache"
 
-export const createUser = async (user:CreateUserParams)=>{
+export async function createUser(user: CreateUserParams) {
     try {
-        await connectDatbase()
-        const newUser = await User.create(user)
-        return  JSON.parse(JSON.stringify(newUser))
+      await connectDatbase()
+  
+      const newUser = await User.create(user)
+      return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
-        handleError(error)
-        
+      handleError(error)
     }
-}
+  }
 
 export const GetUser = async (userId:string)=>{
     try{
