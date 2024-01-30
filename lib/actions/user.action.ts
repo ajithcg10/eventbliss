@@ -11,8 +11,15 @@ import { revalidatePath } from "next/cache"
 export async function createUser(user: CreateUserParams) {
     try {
       await connectToDatabase()
-  
-      const newUser = await User.create(user)
+      const data =  {
+        clerkId: "ajith",
+        firstName: "cg",
+        lastName: "helo",
+        username: "ajith",
+        email: "ajith@gmail.com",
+        photo: "hi gihd",
+      }
+      const newUser = await User.create(data)
       return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
       console.log(error,"database error")
