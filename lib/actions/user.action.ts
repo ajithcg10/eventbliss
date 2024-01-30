@@ -1,6 +1,6 @@
 'use server'
 
-import { connectDatbase } from "@lib/dataBase"
+import { connectToDatabase } from "@lib/dataBase"
 import User from "@lib/dataBase/models/user.model"
 import Event from "@lib/dataBase/models/event.model"
 import Order from "@lib/dataBase/models/order.model"
@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache"
 
 export async function createUser(user: CreateUserParams) {
     try {
-      await connectDatbase()
+      await connectToDatabase()
   
       const newUser = await User.create(user)
       return JSON.parse(JSON.stringify(newUser))
@@ -22,7 +22,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function getUserById(userId: string) {
     try {
-      await connectDatbase()
+      await connectToDatabase()
   
       const user = await User.findById(userId)
   
@@ -37,7 +37,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function updateUser(clerkId: string, user: UpdateUserParams) {
     try {
-      await connectDatbase()
+      await connectToDatabase()
   
       const updatedUser = await User.findOneAndUpdate({ clerkId }, user, { new: true })
   
@@ -50,7 +50,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function deleteUser(clerkId: string) {
     try {
-      await connectDatbase()
+      await connectToDatabase()
   
       // Find user to delete
       const userToDelete = await User.findOne({ clerkId })
