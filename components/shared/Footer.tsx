@@ -14,7 +14,7 @@ export default function Footer() {
             width={128}
           />
         </Link>
-        <p>2023 EventBliss. All Rights reserved.</p>
+        <p>2023 EventBliss. All Rights reserved</p>
       </div>
     </footer>
   )
