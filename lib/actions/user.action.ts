@@ -1,48 +1,19 @@
 'use server'
 
-import { connect } from "@lib/dataBase"
+import { connectToDatabase } from "@lib/dataBase"
 import User from "@lib/dataBase/models/user.model"
 import Event from "@lib/dataBase/models/event.model"
 import Order from "@lib/dataBase/models/order.model"
 import { handleError } from "@lib/utils"
 import { CreateUserParams, UpdateUserParams } from "@types"
 import { revalidatePath } from "next/cache"
-import { NextRequest, NextResponse } from "next/server"
-
-// export async function createUser(request:NextRequest ,res:NextResponse,){
-//   try { 
-
-   
-    
-    
-
-
-    
-//     console.log(savedUser,"savedUser");
-//     return NextResponse.json({  
-//       message: "User created successfully",
-//       success: true,
-//       savedUser
-//   });
-//   } 
-//   catch (error:any) {
-//       console.log(error  )
-//       return NextResponse.json({
-//           Error:error.message,},{
-//               status:500
-//           })
-//   }
-// }
-
-
-
 
 export async function createUser(user: CreateUserParams) {
     try {
-      await connect()
-      const newUser=  new User(user)
-      const savedUser  = await newUser.save()
-      return JSON.parse(JSON.stringify(savedUser))
+      await connectToDatabase()
+      
+      const newUser = await User.create(user)
+      return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
       console.log(error,"database error")
       
@@ -51,7 +22,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function getUserById(userId: string) {
     try {
-      await connect()
+      await connectToDatabase()
   
       const user = await User.findById(userId)
   
@@ -66,7 +37,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function updateUser(clerkId: string, user: UpdateUserParams) {
     try {
-      await connect()
+      await connectToDatabase()
   
       const updatedUser = await User.findOneAndUpdate({ clerkId }, user, { new: true })
   
@@ -79,7 +50,7 @@ export async function createUser(user: CreateUserParams) {
 
   export async function deleteUser(clerkId: string) {
     try {
-      await connect()
+      await connectToDatabase()
   
       // Find user to delete
       const userToDelete = await User.findOne({ clerkId })
