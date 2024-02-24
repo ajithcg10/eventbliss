@@ -7,13 +7,13 @@ export interface IEvent extends Document {
     location?: string;
     createAt: Date;
     imageUrl: string;
-    startTime: Date;
-    endTime: Date;
-    Price?: string;
-    IsFree: boolean;
+    startDateTime: Date;
+    endDateTime: Date;
+    price: string;
+    isFree: boolean;
     Url?: string;
     category: {_id:string,name:string} // Assuming the type for category is a string, you might need to adjust it based on your actual category schema.
-    organizer:{_id:string,firstName:string,LastName:string}; // Assuming the type for organizer is a string, you might need to adjust it based on your actual User schema.
+    organizer:{_id:string,firstName:string,lastName:string}; // Assuming the type for organizer is a string, you might need to adjust it based on your actual User schema.
 }
 
 const EventSchema = new Schema({
@@ -22,11 +22,11 @@ const EventSchema = new Schema({
     location:{type:String},
     createAt:{type:Date ,default:Date.now},
     imageUrl:{type:String,require:true},
-    startTime:{type:Date,default:Date.now},
-    endTime:{type:Date,default:Date.now},
-    Price:{type:String},
-    IsFree:{type:Boolean,default:false},
-    Url:{type:String},
+    startDateTime:{type:Date,default:Date.now},
+    endDateTime:{type:Date,default:Date.now},
+    price:{type:String},
+    isFree:{type:Boolean,default:false},
+    url:{type:String},
     category:{type:Schema.Types.ObjectId ,ref:'category'},
     organizer:{type:Schema.Types.ObjectId,ref:'User'},
 })

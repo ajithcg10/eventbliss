@@ -1,8 +1,22 @@
 import { Button } from "@/components/ui/button";
+import { auth } from "@clerk/nextjs";
+import Collection from "@components/shared/Collection";
+import { getAllEvents } from "@lib/actions/event.actions";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const event = await getAllEvents(
+{    query:'',
+    category:'',
+    page:1,
+    limit:6}
+  );
+console.log(event,"evntdk");
+const {sessionClaims} = auth()
+const userId = sessionClaims?.userId as string
+  console.log(userId,"id please");
+  
   return (
     <>
     {/* SpotLight Section */}
@@ -31,6 +45,15 @@ export default function Home() {
           search 
           categoryfilter
         </div>
+        <Collection
+          data={event?.data}
+          emptyTitle="No Events Found"
+          emptyStateSubText="come back later"
+          collectionType="All_Events"
+          limt={6}
+          page={1}
+          totalPages={2}
+        />
       </section>
     </>
   );

@@ -9,26 +9,40 @@ FormLabel,FormMessage,} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { EventSchema } from '@lib/validator'
-import { z } from 'zod'
+import { date, string, z } from 'zod'
 import { eventDefaultValues } from '@constants'
 import DropDown from './DropDown'
-import{ FileUploader }from './FileUploader'
+// import{ FileUploader }from './FileUploader'
 import Image from 'next/image'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import {useUploadThing} from "@/lib/uploadthing"
+import { useRouter } from 'next/navigation'
+import { createEvent, updateEvent } from '@lib/actions/event.actions'
+import FileUploader from './FileUploader'
+import { IEvent } from '@lib/dataBase/models/event.model'
 
 
 interface EventType {
     userId: string,
-    type:"Create"| "Update"
+    type:"Create"| "Update",
+    event?:IEvent,
+    eventId?: string,
+    
 }
 
-export default function Eventform({userId, type}:EventType) {
-  const [files, setFiles] = useState<File[]>([])
-
-
-    const initailvalue =eventDefaultValues
+export default function Eventform({userId, type,event,eventId}:EventType) {
+  
+  const [file, setFile] = useState("")
+  const {startUpload } = useUploadThing('imageUploader')
+  console.log(file,"datta");
+const router = useRouter()
+    const initailvalue =event && type === "Update" ? { 
+      ...event, 
+      startDateTime: new Date(event.startDateTime), 
+      endDateTime: new Date(event.endDateTime) 
+    }:  eventDefaultValues
+    // console.log(files);
     
     const form = useForm<z.infer<typeof EventSchema>>({
         resolver: zodResolver(EventSchema),
@@ -36,11 +50,50 @@ export default function Eventform({userId, type}:EventType) {
       })
      
       // 2. Define a submit handler.
-      function onSubmit(values: z.infer<typeof EventSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values,"testing...")
+      async function onSubmit(values: z.infer<typeof EventSchema>) {
+       
+          if(!file) {
+            return
+          }
+        if(type === 'Create') {
+          try {
+            const newEvent = await createEvent({
+              event: { ...values, imageUrl: file },
+              userId,
+              path: '/profile'
+            })
+    
+            if(newEvent) {
+              form.reset();
+              setFile("")
+              router.push(`/events/${newEvent._id}`)
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        if(type === 'Update'){
+          if(!eventId){
+            router.back()
+            return
+          }
+          try {
+            const updatedEvent = await updateEvent({
+              userId,
+              event: { ...values, imageUrl: file,_id:eventId  },
+              path: `/events/${eventId}`
+            })
+            if (updatedEvent){
+              form.reset()
+              router.push(`/events/${updatedEvent._id}`)
+            }
+            
+          } catch (error) {
+            
+          }
+        }
       }
+    
     
 
   return (
@@ -92,7 +145,9 @@ export default function Eventform({userId, type}:EventType) {
                   render={({ field }) => (
                     <FormItem className='w-full '>
                     <FormControl className='h-72'>
-                       <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFiles={setFiles} />
+                       
+                       {/* <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFiles={setFiles} /> */}
+                       <FileUploader  setFile={setFile} file={file}  />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -120,7 +175,7 @@ export default function Eventform({userId, type}:EventType) {
         <div className='flex flex-col gap-5 md:flex-row'>
           <FormField
                 control={form.control}
-                name="startDate"
+                name="startDateTime"
                 render={({ field }) => (
                   <FormItem className='w-full'>
                   <FormControl>
@@ -131,9 +186,9 @@ export default function Eventform({userId, type}:EventType) {
                       selected={field.value}
                        onChange={(date:Date) => field.onChange(date)} 
                        showTimeSelect
-                       timeInputLabel='Time:'
-                       dateFormat="MM/DD/YYYY h:mm aa"
-                       wrapperClassName='datepicker'
+                        timeInputLabel="Time:"
+                        dateFormat="MM/dd/yyyy h:mm aa"
+                        wrapperClassName="datePicker"
                        />
                     </div>
                   </FormControl>
@@ -143,7 +198,7 @@ export default function Eventform({userId, type}:EventType) {
               />
               <FormField
                 control={form.control}
-                name="endDate"
+                name="endDateTime"
                 render={({ field }) => (
                   <FormItem className='w-full'>
                   <FormControl>
@@ -154,9 +209,9 @@ export default function Eventform({userId, type}:EventType) {
                       selected={field.value}
                        onChange={(date:Date) => field.onChange(date)} 
                        showTimeSelect
-                       timeInputLabel='Time:'
-                       dateFormat="MM/DD/YYYY h:mm aa"
-                       wrapperClassName='datepicker'
+                       timeInputLabel="Time:"
+                       dateFormat="MM/dd/yyyy h:mm aa"
+                       wrapperClassName="datePicker"
 
 
                        />

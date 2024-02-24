@@ -9,8 +9,8 @@ export const EventSchema = z.object({
    location: z.string().min(3,{message:"Location must be at least 3 characters"})
    .max(400,{message:"Location must be less than 400 characters"}),
    imageUrl:z.string(),
-   startDate:z.date(),
-   endDate:z.date(),
+   startDateTime:z.date(),
+   endDateTime:z.date(),
    categoryId:z.string(),
    price:z.string(),
    isFree:z.boolean(),
