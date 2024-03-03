@@ -1,21 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { auth } from "@clerk/nextjs";
+import CategoryFillter from "@components/shared/CategoryFillter";
 import Collection from "@components/shared/Collection";
+import Serach from "@components/shared/Serach";
 import { getAllEvents } from "@lib/actions/event.actions";
+import { SearchParamProps } from "@types";
+
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function Home({searchParams}:SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const serachText = searchParams?.query as string
+  const category= searchParams?.category as string
+  
+
   const event = await getAllEvents(
-{    query:'',
-    category:'',
-    page:1,
-    limit:6}
+{    query:serachText,
+    category,
+    page:page,
+    limit:4}
   );
-console.log(event,"evntdk");
+
+
 const {sessionClaims} = auth()
 const userId = sessionClaims?.userId as string
-  console.log(userId,"id please");
+
   
   return (
     <>
@@ -42,17 +52,17 @@ const userId = sessionClaims?.userId as string
       <section id="events" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
         <h2 className="h2-bold ">Trust by <br /> Thousands of Events</h2>
         <div className="flex w-full flex-col gap-5 md:row">
-          search 
-          categoryfilter
+          <Serach placeholder="Serach...."/>
+          <CategoryFillter/>
         </div>
         <Collection
           data={event?.data}
           emptyTitle="No Events Found"
           emptyStateSubText="come back later"
           collectionType="All_Events"
-          limt={6}
-          page={1}
-          totalPages={2}
+          limt={2}
+          page={page}
+          totalPages={event?.totalPages}
         />
       </section>
     </>

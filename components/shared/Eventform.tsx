@@ -35,7 +35,7 @@ export default function Eventform({userId, type,event,eventId}:EventType) {
   
   const [file, setFile] = useState("")
   const {startUpload } = useUploadThing('imageUploader')
-  console.log(file,"datta");
+
 const router = useRouter()
     const initailvalue =event && type === "Update" ? { 
       ...event, 

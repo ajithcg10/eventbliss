@@ -5,10 +5,10 @@ import { formatDateTime } from "@lib/utils";
 import { SearchParamProps } from "@types";
 import Image from "next/image";
 
-export default async  function page({params:{id},searchParams}:SearchParamProps) {
+export default async  function page({params: { id },searchParams}:SearchParamProps) {
 
 const event = await getEventById(id)
-console.log(event,"ajith");
+
 
 const realtedEvent = await getRelatedEventsByCategory({categoryId:event.category._id,
     eventId:event._id,
@@ -85,8 +85,8 @@ const realtedEvent = await getRelatedEventsByCategory({categoryId:event.category
                 emptyStateSubText="come back later"
                 collectionType="All_Events"
                 limt={6}
-                page={1}
-                totalPages={2}
+                page={searchParams.page as string} 
+                totalPages={realtedEvent?.totalPages}
             />
         </section>
     </>

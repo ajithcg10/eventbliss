@@ -36,7 +36,7 @@ export default function FileUploader({setFile,file}:FileProps) {
         endpoint="imageUploader"
         onClientUploadComplete={(res:any) => {
           // Do something with the response
-          console.log("Files: ", res);
+
           setFile(res[0].url)
         }}
         onUploadError={(error: Error) => {

@@ -49,7 +49,8 @@ const Dropdown = ({ value, onchangeHandler }: DropdownProps) => {
 
     getCategories();
   }, [])
-console.log(categories,"save");
+
+
 
   return (
     <Select onValueChange={onchangeHandler} defaultValue={value}>

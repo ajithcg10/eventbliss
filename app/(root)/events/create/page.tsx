@@ -7,7 +7,7 @@ export default function CreateEvent() {
   const userId = sessionClaims?.userId as string
   
   // const userId = "65c539523026e23c2ae7f81a"
-  console.log(userId,"idjjhhiu");
+
   
   return (
     <>

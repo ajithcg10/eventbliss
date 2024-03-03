@@ -18,7 +18,7 @@ export default function Card({event,hidePrice,hasOrderLink}:CardProps) {
  const {sessionClaims} =auth()
  const userId = sessionClaims?.userId as string
 const isEventCreator = userId === event?.organizer?._id.toString()
-console.log(isEventCreator,"helo");
+
 
  
   
@@ -63,7 +63,7 @@ console.log(isEventCreator,"helo");
               {event?.organizer?.firstName} {event?.organizer?.lastName}
             </p>
             {hasOrderLink && (
-              <Link className='flex items-center' href={`/orders?eventId=${event._id}`}>
+              <Link className='flex items-center' href={`/ordersPage?eventId=${event._id}`}>
                 <p className='text-primary-500 mr-2'>Order Details</p>
                 <Image  src="/assets/icons/arrow.svg" alt='icon' width={10} height={10}/>
               </Link>
